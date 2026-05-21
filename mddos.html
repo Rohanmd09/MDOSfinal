@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeOS</title>
+    
+    <!-- Google Fonts: DM Sans & DM Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"DM Sans"', 'sans-serif'],
+                        mono: ['"DM Mono"', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6', // Main Purple
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                            950: '#2e1065',
+                        },
+                        dark: {
+                            bg: '#0E0E11',
+                            panel: '#1A1A1F',
+                            border: '#2A2A35',
+                            text: '#E2E8F0',
+                            muted: '#94A3B8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Chart.js & Sortable.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="mddos.css">
+</head>
+<body class="bg-dark-bg text-dark-text font-sans h-screen w-screen overflow-hidden flex selection:bg-brand-500/30 selection:text-brand-200">
+
+    <!-- Left Sidebar -->
+    <aside class="w-64 h-full bg-dark-bg border-r border-dark-border flex flex-col pt-6 pb-4 flex-shrink-0 relative z-10">
+        <div class="px-6 mb-8 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.5)]">
+                <i class="ph-bold ph-lightning text-white text-lg"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-tight text-white leading-tight">LifeOS</h1>
+                <p class="text-[10px] text-dark-muted font-mono uppercase tracking-wider">Rohan MD</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-3 space-y-1 overflow-y-auto custom-scrollbar">
+            <div class="text-xs font-mono text-dark-muted mb-2 px-3 uppercase tracking-wider mt-4">Dashboards</div>
+            <a href="#" data-view="overview" class="nav-btn active flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-dark-text hover:bg-dark-panel hover:text-white transition-all">
+                <i class="ph ph-squares-four text-lg text-dark-muted group-hover:text-brand-400"></i>
+                Overview
+            </a>
+            <a href="#" data-view="tasks" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-dark-muted hover:bg-dark-panel hover:text-white transition-all">
+                <i class="ph ph-check-square-offset text-lg text-dark-muted group-hover:text-brand-400"></i>
+                Tasks
+            </a>
+            <a href="#" data-view="focus" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-dark-muted hover:bg-dark-panel hover:text-white transition-all">
+                <i class="ph ph-target text-lg text-dark-muted group-hover:text-brand-400"></i>
+                Focus
+            </a>
+            
+            <div class="text-xs font-mono text-dark-muted mb-2 px-3 uppercase tracking-wider mt-6">Life & Growth</div>
+            <a href="#" data-view="academics" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-dark-muted hover:bg-dark-panel hover:text-white transition-all">
+                <i class="ph ph-books text-lg text-dark-muted group-hover:text-brand-400"></i>
+                Academics
+            </a>
+            <a href="#" data-view="extracurriculars" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-dark-muted hover:bg-dark-panel hover:text-white transition-all">
+                <i class="ph ph-rocket-launch text-lg text-dark-muted group-hover:text-brand-400"></i>
+                Extracurriculars
+            </a>
+            <a href="#" data-view="habits" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-dark-muted hover:bg-dark-panel hover:text-white transition-all">
+                <i class="ph ph-plant text-lg text-dark-muted group-hover:text-brand-400"></i>
+                Habits
+            </a>
+            
+            <div class="text-xs font-mono text-dark-muted mb-2 px-3 uppercase tracking-wider mt-6">Insights</div>
+            <a href="#" data-view="analytics" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-dark-muted hover:bg-dark-panel hover:text-white transition-all">
+                <i class="ph ph-chart-line-up text-lg text-dark-muted group-hover:text-brand-400"></i>
+                Analytics
+            </a>
+        </nav>
+
+        <div class="px-6 mt-auto pt-4 border-t border-dark-border">
+            <button id="cmd-k-btn" class="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-dark-panel border border-dark-border hover:border-brand-500/50 transition-colors group">
+                <span class="text-xs text-dark-muted flex items-center gap-2 group-hover:text-white transition-colors">
+                    <i class="ph ph-command text-sm"></i> Command
+                </span>
+                <div class="flex items-center gap-1">
+                    <kbd class="px-1.5 py-0.5 rounded bg-dark-bg border border-dark-border text-[10px] font-mono text-dark-muted group-hover:text-brand-400">Ctrl</kbd>
+                    <kbd class="px-1.5 py-0.5 rounded bg-dark-bg border border-dark-border text-[10px] font-mono text-dark-muted group-hover:text-brand-400">K</kbd>
+                </div>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative z-0">
+        <!-- Ambient Glow -->
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-500/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+
+        <!-- Top Utility Bar -->
+        <header class="h-16 border-b border-dark-border flex items-center justify-between px-8 bg-dark-bg/80 backdrop-blur-md z-20">
+            <!-- Shortcuts Dock -->
+            <div class="flex items-center gap-2" id="shortcuts-dock">
+                <a href="https://notion.so" target="_blank" class="shortcut-icon" title="Notion"><img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png" alt="Notion" class="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity"></a>
+                <a href="https://figma.com" target="_blank" class="shortcut-icon" title="Figma"><i class="ph-fill ph-figma-logo text-xl text-[#F24E1E]"></i></a>
+                <a href="https://github.com" target="_blank" class="shortcut-icon" title="GitHub"><i class="ph-fill ph-github-logo text-xl text-white"></i></a>
+                <a href="https://vercel.com" target="_blank" class="shortcut-icon" title="Vercel"><i class="ph-fill ph-triangle text-xl text-white"></i></a>
+                <a href="https://supabase.com" target="_blank" class="shortcut-icon" title="Supabase"><i class="ph-fill ph-database text-xl text-[#3ECF8E]"></i></a>
+            </div>
+
+            <!-- Clock & Quick Actions -->
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <div id="live-clock" class="text-sm font-medium text-white tracking-wide">00:00 AM</div>
+                    <div id="live-date" class="text-[10px] font-mono text-dark-muted uppercase">Mon, Jan 1</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- View Container -->
+        <div id="view-container" class="flex-1 overflow-y-auto custom-scrollbar p-8 relative">
+            <!-- Views will be injected or toggled here -->
+            
+            <!-- 1. OVERVIEW VIEW -->
+            <section id="overview-view" class="view-section active animate-fade-in">
+                <h2 class="text-2xl font-bold text-white mb-6">Good Morning, Rohan.</h2>
+                <div id="routine-alert-banner" class="hidden mb-4 rounded-xl border border-red-500/40 bg-red-500/10 text-red-200 px-4 py-2 text-sm"></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Today's Priority -->
+                    <div class="col-span-2 glass-panel p-6 rounded-2xl">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-medium text-white flex items-center gap-2"><i class="ph-fill ph-star text-brand-400"></i> Today's Priority</h3>
+                            <button class="text-xs font-mono text-brand-400 hover:text-brand-300 transition-colors">VIEW ALL</button>
+                        </div>
+                        <div class="space-y-3" id="overview-tasks">
+                            <!-- Injected Tasks -->
+                            <div class="text-sm text-dark-muted italic">Loading priorities...</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="glass-panel p-6 rounded-2xl flex flex-col">
+                        <h3 class="text-lg font-medium text-white mb-4 flex items-center gap-2"><i class="ph-fill ph-lightning text-yellow-400"></i> Pulse</h3>
+                        <div class="space-y-4 flex-1">
+                            <div class="flex justify-between items-end pb-4 border-b border-dark-border">
+                                <div>
+                                    <div class="text-xs text-dark-muted font-mono mb-1">FOCUS TIME</div>
+                                    <div id="stat-focus-time" class="text-2xl font-bold text-white">0h 00m</div>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400"><i class="ph-fill ph-timer"></i></div>
+                            </div>
+                            <div class="flex justify-between items-end pb-4 border-b border-dark-border">
+                                <div>
+                                    <div class="text-xs text-dark-muted font-mono mb-1">TASKS DONE</div>
+                                    <div id="stat-tasks-done" class="text-2xl font-bold text-white">0<span class="text-sm text-dark-muted font-normal ml-1">/ 0</span></div>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400"><i class="ph-fill ph-check-circle"></i></div>
+                            </div>
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <div class="text-xs text-dark-muted font-mono mb-1">CURRENT STREAK</div>
+                                    <div id="stat-current-streak" class="text-2xl font-bold text-white">0 <span class="text-sm text-dark-muted font-normal ml-1">days</span></div>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400"><i class="ph-fill ph-fire"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mini Calendar -->
+                    <div class="col-span-1 glass-panel p-6 rounded-2xl">
+                        <h3 class="text-lg font-medium text-white mb-4 flex items-center gap-2"><i class="ph-fill ph-calendar text-brand-400"></i> Calendar</h3>
+                        <div id="mini-calendar" class="w-full text-sm">
+                            <!-- Injected JS Calendar -->
+                        </div>
+                    </div>
+
+                    <!-- Daily Routine Engine -->
+                    <div class="col-span-2 glass-panel p-6 rounded-2xl">
+                        <div class="flex items-center justify-between mb-4 gap-3">
+                            <h3 class="text-lg font-medium text-white flex items-center gap-2"><i class="ph-fill ph-timer text-emerald-400"></i> Daily Routine Engine</h3>
+                            <div class="text-right">
+                                <div id="next-timeblock-label" class="text-xs text-brand-300 font-mono uppercase">Next Block --</div>
+                                <div id="next-timeblock-countdown" class="text-xs text-dark-muted font-mono">--:--:--</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="flex items-center justify-between text-xs text-dark-muted mb-1">
+                                <span>Daily Compliance</span>
+                                <span id="routine-compliance-text">0%</span>
+                            </div>
+                            <div class="h-2 rounded-full bg-dark-border overflow-hidden">
+                                <div id="routine-compliance-bar" class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-brand-500" style="width:0%"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-2 max-h-72 overflow-y-auto custom-scrollbar pr-1" id="timeblock-list">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Quick Add Activity -->
+                    <div class="col-span-1 glass-panel p-6 rounded-2xl">
+                        <h3 class="text-lg font-medium text-white mb-4 flex items-center gap-2"><i class="ph-fill ph-lightning text-brand-400"></i> Quick Add</h3>
+                        <form id="quick-add-form" class="space-y-3">
+                            <select id="quick-activity-type" class="w-full bg-dark-bg border border-dark-border rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-brand-500">
+                                <option>Study</option>
+                                <option>Gym</option>
+                                <option>Sport</option>
+                                <option>Meal</option>
+                                <option>Sleep</option>
+                                <option>Project Work</option>
+                                <option>Other</option>
+                            </select>
+                            <input id="quick-duration" type="number" min="5" max="600" value="45" class="w-full bg-dark-bg border border-dark-border rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-brand-500" placeholder="Duration (minutes)">
+                            <input id="quick-context" type="text" class="w-full bg-dark-bg border border-dark-border rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-brand-500" placeholder="Subject/Project">
+                            <div class="grid grid-cols-2 gap-2">
+                                <input id="quick-notes" type="text" class="w-full bg-dark-bg border border-dark-border rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-brand-500" placeholder="Notes">
+                                <select id="quick-energy" class="w-full bg-dark-bg border border-dark-border rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-brand-500">
+                                    <option value="5">Energy 5</option>
+                                    <option value="4">Energy 4</option>
+                                    <option value="3" selected>Energy 3</option>
+                                    <option value="2">Energy 2</option>
+                                    <option value="1">Energy 1</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white rounded-lg py-2 text-sm font-medium transition-colors">Log Activity</button>
+                        </form>
+                        <div class="mt-3 text-xs text-dark-muted" id="quick-add-feedback">No activity logged yet.</div>
+                    </div>
+
+                    <!-- Recent GitHub Activity (Mock) -->
+                    <div class="col-span-2 glass-panel p-6 rounded-2xl">
+                        <h3 class="text-lg font-medium text-white mb-4 flex items-center gap-2"><i class="ph-fill ph-git-commit text-brand-400"></i> Activity</h3>
+                        <div class="space-y-4" id="recent-activity-list">
+                            <div class="flex items-center gap-4 text-sm">
+                                <div class="w-8 h-8 rounded-full bg-dark-bg border border-dark-border flex items-center justify-center">
+                                    <i class="ph-bold ph-git-merge text-dark-muted"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-white">Merged PR <span class="font-mono text-brand-400">#42</span> in <span class="font-bold">Grydx</span></p>
+                                    <p class="text-xs text-dark-muted">2 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm">
+                                <div class="w-8 h-8 rounded-full bg-dark-bg border border-dark-border flex items-center justify-center">
+                                    <i class="ph-bold ph-push-pin text-dark-muted"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-white">Pushed to <span class="font-mono text-brand-400">main</span> in <span class="font-bold">PITAR</span></p>
+                                    <p class="text-xs text-dark-muted">5 hours ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. TASKS VIEW -->
+            <section id="tasks-view" class="view-section hidden animate-fade-in h-full flex flex-col">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">Tasks</h2>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button id="clear-completed-btn" class="px-3 py-2 bg-dark-panel border border-dark-border hover:border-brand-500/40 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                            <i class="ph-bold ph-broom"></i> Clear Done
+                        </button>
+                        <button id="fresh-start-btn" class="px-3 py-2 bg-dark-panel border border-red-500/30 hover:border-red-400/60 text-red-200 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                            <i class="ph-bold ph-arrow-counter-clockwise"></i> Fresh Start
+                        </button>
+                        <button id="add-task-btn" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-lg text-sm font-medium transition-colors shadow-[0_0_15px_rgba(139,92,246,0.3)] flex items-center gap-2">
+                            <i class="ph-bold ph-plus"></i> New Task
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <input id="task-search" type="text" placeholder="Search tasks by title..." class="w-full max-w-md bg-dark-panel/70 border border-dark-border rounded-lg px-4 py-2 text-sm text-white placeholder-dark-muted outline-none focus:border-brand-500 transition-colors">
+                </div>
+                
+                <!-- Filters -->
+                <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2 custom-scrollbar">
+                    <button class="filter-btn active px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-dark-panel text-white hover:border-brand-500/50 transition-colors" data-subject="All">All</button>
+                    <button class="filter-btn px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-transparent text-dark-muted hover:text-white transition-colors" data-subject="Physics">Physics</button>
+                    <button class="filter-btn px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-transparent text-dark-muted hover:text-white transition-colors" data-subject="Maths">Maths</button>
+                    <button class="filter-btn px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-transparent text-dark-muted hover:text-white transition-colors" data-subject="Further Maths">Further Maths</button>
+                    <button class="filter-btn px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-transparent text-dark-muted hover:text-white transition-colors" data-subject="Economics">Economics</button>
+                    <button class="filter-btn px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-transparent text-dark-muted hover:text-white transition-colors" data-subject="Accounts">Accounts</button>
+                    <button class="filter-btn px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-transparent text-dark-muted hover:text-white transition-colors" data-subject="English">English</button>
+                    <button class="filter-btn px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-transparent text-dark-muted hover:text-white transition-colors" data-subject="Projects">Projects</button>
+                    <button class="filter-btn px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-transparent text-dark-muted hover:text-white transition-colors" data-subject="Personal">Personal</button>
+                </div>
+
+                <!-- Kanban Board -->
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6 overflow-hidden">
+                    <!-- To Do Column -->
+                    <div class="flex flex-col bg-dark-bg/50 rounded-2xl border border-dark-border/50 p-4">
+                        <h3 class="text-sm font-medium text-dark-muted mb-4 flex items-center gap-2 uppercase tracking-wider font-mono">
+                            <div class="w-2 h-2 rounded-full bg-blue-500"></div> To Do
+                        </h3>
+                        <div id="kanban-todo" class="flex-1 space-y-3 overflow-y-auto custom-scrollbar min-h-[200px]">
+                            <!-- Cards -->
+                        </div>
+                    </div>
+                    <!-- In Progress Column -->
+                    <div class="flex flex-col bg-dark-bg/50 rounded-2xl border border-dark-border/50 p-4">
+                        <h3 class="text-sm font-medium text-dark-muted mb-4 flex items-center gap-2 uppercase tracking-wider font-mono">
+                            <div class="w-2 h-2 rounded-full bg-orange-500"></div> In Progress
+                        </h3>
+                        <div id="kanban-progress" class="flex-1 space-y-3 overflow-y-auto custom-scrollbar min-h-[200px]">
+                            <!-- Cards -->
+                        </div>
+                    </div>
+                    <!-- Done Column -->
+                    <div class="flex flex-col bg-dark-bg/50 rounded-2xl border border-dark-border/50 p-4">
+                        <h3 class="text-sm font-medium text-dark-muted mb-4 flex items-center gap-2 uppercase tracking-wider font-mono">
+                            <div class="w-2 h-2 rounded-full bg-emerald-500"></div> Done
+                        </h3>
+                        <div id="kanban-done" class="flex-1 space-y-3 overflow-y-auto custom-scrollbar min-h-[200px]">
+                            <!-- Cards -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. FOCUS VIEW -->
+            <section id="focus-view" class="view-section hidden animate-fade-in h-full flex flex-col items-center justify-center">
+                <div class="text-center max-w-md w-full relative">
+                    <!-- Glow -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-brand-500/10 rounded-full blur-[80px] -z-10 pointer-events-none"></div>
+                    
+                    <h2 class="text-2xl font-bold text-white mb-2">Deep Work</h2>
+                    <p class="text-dark-muted text-sm mb-12">Eliminate distractions. Execute.</p>
+
+                    <!-- Timer -->
+                    <div class="relative w-64 h-64 mx-auto mb-10 flex items-center justify-center">
+                        <svg class="absolute inset-0 w-full h-full transform -rotate-90">
+                            <circle cx="128" cy="128" r="120" stroke="currentColor" stroke-width="4" fill="transparent" class="text-dark-border"/>
+                            <circle id="timer-progress" cx="128" cy="128" r="120" stroke="currentColor" stroke-width="4" fill="transparent" class="text-brand-500 transition-all duration-1000 ease-linear" stroke-dasharray="753.98" stroke-dashoffset="0"/>
+                        </svg>
+                        <div class="text-center z-10">
+                            <div id="timer-display" class="text-6xl font-bold text-white tracking-tighter mb-2 font-mono">25:00</div>
+                            <div id="timer-status" class="text-xs font-mono text-brand-400 uppercase tracking-widest">Ready</div>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="flex items-center justify-center gap-4 mb-8">
+                        <button class="timer-mode-btn active px-4 py-2 rounded-lg text-sm font-medium border border-brand-500/50 bg-brand-500/10 text-brand-300" data-time="25">25m</button>
+                        <button class="timer-mode-btn px-4 py-2 rounded-lg text-sm font-medium border border-dark-border hover:border-brand-500/30 text-dark-muted hover:text-white transition-colors" data-time="45">45m</button>
+                        <button class="timer-mode-btn px-4 py-2 rounded-lg text-sm font-medium border border-dark-border hover:border-brand-500/30 text-dark-muted hover:text-white transition-colors" data-time="60">60m</button>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-4">
+                        <button id="timer-toggle" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                            <i class="ph-fill ph-play text-2xl"></i>
+                        </button>
+                        <button id="timer-reset" class="w-12 h-12 rounded-full bg-dark-panel border border-dark-border text-dark-muted flex items-center justify-center hover:text-white transition-colors">
+                            <i class="ph-bold ph-arrow-counter-clockwise text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. ACADEMICS VIEW -->
+            <section id="academics-view" class="view-section hidden animate-fade-in">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">A2 + AS Curriculum</h2>
+                    <button id="add-topic-btn" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-lg text-sm font-medium transition-colors shadow-[0_0_15px_rgba(139,92,246,0.3)] flex items-center gap-2">
+                        <i class="ph-bold ph-plus"></i> New Topic
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6" id="academics-grid">
+                    <!-- Injected by JS -->
+                </div>
+            </section>
+
+            <!-- 5. EXTRACURRICULARS VIEW -->
+            <section id="extracurriculars-view" class="view-section hidden animate-fade-in">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">Projects & Initiatives</h2>
+                    <button id="add-project-btn" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-lg text-sm font-medium transition-colors shadow-[0_0_15px_rgba(139,92,246,0.3)] flex items-center gap-2">
+                        <i class="ph-bold ph-plus"></i> New Project
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
+                    <!-- Injected by JS -->
+                </div>
+            </section>
+
+            <!-- 6. HABITS VIEW -->
+            <section id="habits-view" class="view-section hidden animate-fade-in">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">Habit Tracker</h2>
+                    <button id="add-habit-btn" class="px-4 py-2 bg-dark-panel border border-dark-border hover:border-brand-500/50 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                        <i class="ph-bold ph-plus"></i> New Habit
+                    </button>
+                </div>
+                
+                <div class="glass-panel p-6 rounded-2xl mb-8">
+                    <h3 class="text-lg font-medium text-white mb-6">Daily Routines</h3>
+                    <div class="space-y-4" id="habits-list">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h3 class="text-lg font-medium text-white mb-6">Consistency Heatmap (Last 30 Days)</h3>
+                    <div class="flex gap-1 overflow-x-auto pb-4" id="habit-heatmap">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. ANALYTICS VIEW -->
+            <section id="analytics-view" class="view-section hidden animate-fade-in">
+                <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+                    <h2 class="text-2xl font-bold text-white">Deep Analytics</h2>
+                    <div class="flex items-center gap-2">
+                        <button class="analytics-period-btn active px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-dark-panel text-white hover:border-brand-500/50 transition-colors" data-period="week">Week</button>
+                        <button class="analytics-period-btn px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-transparent text-dark-muted hover:text-white transition-colors" data-period="month">Month</button>
+                        <button class="analytics-period-btn px-3 py-1.5 rounded-full text-xs font-medium border border-dark-border bg-transparent text-dark-muted hover:text-white transition-colors" data-period="year">Year</button>
+                        <button id="export-csv-btn" class="px-3 py-1.5 rounded-lg text-xs font-medium border border-dark-border bg-dark-panel text-white hover:border-brand-500/50 transition-colors flex items-center gap-1.5">
+                            <i class="ph-bold ph-download-simple"></i> Export CSV
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl h-[300px] flex flex-col">
+                        <h3 class="text-sm font-medium text-dark-muted mb-4 uppercase tracking-wider font-mono">Productivity Trend (Focus Hours)</h3>
+                        <div class="flex-1 relative">
+                            <canvas id="focusChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl h-[300px] flex flex-col">
+                        <h3 class="text-sm font-medium text-dark-muted mb-4 uppercase tracking-wider font-mono">Task Completion by Subject</h3>
+                        <div class="flex-1 relative flex items-center justify-center">
+                            <canvas id="tasksChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl h-[300px] flex flex-col">
+                        <h3 class="text-sm font-medium text-dark-muted mb-4 uppercase tracking-wider font-mono">Time Allocation by Domain (Weekly)</h3>
+                        <div class="flex-1 relative flex items-center justify-center">
+                            <canvas id="domainChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <h3 class="text-sm font-medium text-dark-muted mb-4 uppercase tracking-wider font-mono">Weekly Domain Heatmap</h3>
+                        <div id="weekly-domain-heatmap" class="space-y-2">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <h3 class="text-sm font-medium text-dark-muted mb-4 uppercase tracking-wider font-mono">Variance Alerts & Burnout Risk</h3>
+                        <div id="variance-alerts" class="space-y-2 mb-4">
+                            <!-- Injected by JS -->
+                        </div>
+                        <div id="burnout-indicator" class="rounded-xl border border-dark-border bg-dark-bg/60 px-3 py-2 text-sm text-dark-muted">
+                            Burnout risk: --.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Command Palette Modal -->
+    <div id="cmd-palette" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center pt-[15vh] hidden opacity-0 transition-opacity">
+        <div class="w-full max-w-xl bg-dark-bg border border-dark-border rounded-xl shadow-2xl overflow-hidden flex flex-col transform scale-95 transition-transform" id="cmd-palette-content">
+            <div class="flex items-center px-4 py-3 border-b border-dark-border">
+                <i class="ph-bold ph-magnifying-glass text-dark-muted text-lg mr-3"></i>
+                <input type="text" id="cmd-input" placeholder="Search pages, tasks, or commands..." class="flex-1 bg-transparent border-none outline-none text-white placeholder-dark-muted font-sans text-lg">
+                <div class="text-[10px] font-mono text-dark-muted border border-dark-border px-1.5 py-0.5 rounded bg-dark-panel">ESC</div>
+            </div>
+            <div class="max-h-[60vh] overflow-y-auto p-2 custom-scrollbar" id="cmd-results">
+                <!-- Results injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity">
+        <div class="w-full max-w-md bg-dark-panel border border-dark-border rounded-2xl shadow-2xl p-6 transform scale-95 transition-transform" id="task-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-white">Create Task</h3>
+                <button id="close-task-modal" class="text-dark-muted hover:text-white"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <form id="task-form" class="space-y-4">
+                <div>
+                    <input type="text" id="task-title" placeholder="Task Title" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors" required>
+                </div>
+                <div>
+                    <textarea id="task-desc" rows="3" placeholder="Description (optional)" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors resize-none"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <select id="task-subject" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors appearance-none cursor-pointer">
+                        <option value="Physics">Physics</option>
+                        <option value="Maths">Maths</option>
+                        <option value="Further Maths">Further Maths</option>
+                        <option value="Economics">Economics</option>
+                        <option value="Accounts">Accounts</option>
+                        <option value="English">English</option>
+                        <option value="Projects">Projects</option>
+                        <option value="Personal">Personal</option>
+                    </select>
+                    <select id="task-priority" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors appearance-none cursor-pointer">
+                        <option value="High">High Priority</option>
+                        <option value="Medium">Medium Priority</option>
+                        <option value="Low">Low Priority</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="date" id="task-date" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors cursor-pointer" required>
+                </div>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white rounded-lg py-2.5 font-medium transition-colors shadow-[0_0_15px_rgba(139,92,246,0.2)]">Add Task</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Topic Modal -->
+    <div id="topic-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity">
+        <div class="w-full max-w-md bg-dark-panel border border-dark-border rounded-2xl shadow-2xl p-6 transform scale-95 transition-transform" id="topic-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-white">Add Topic</h3>
+                <button id="close-topic-modal" class="text-dark-muted hover:text-white"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <form id="topic-form" class="space-y-4">
+                <div>
+                    <input type="text" id="topic-title" placeholder="Topic Name" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors" required>
+                </div>
+                <div>
+                    <select id="topic-subject" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors appearance-none cursor-pointer">
+                        <option value="Physics">Physics</option>
+                        <option value="Maths">Maths</option>
+                        <option value="Further Maths">Further Maths</option>
+                        <option value="Economics">Economics</option>
+                        <option value="Accounts">Accounts</option>
+                        <option value="English">English</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white rounded-lg py-2.5 font-medium transition-colors shadow-[0_0_15px_rgba(139,92,246,0.2)]">Add Topic</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="project-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity">
+        <div class="w-full max-w-md bg-dark-panel border border-dark-border rounded-2xl shadow-2xl p-6 transform scale-95 transition-transform" id="project-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-white">Add Project</h3>
+                <button id="close-project-modal" class="text-dark-muted hover:text-white"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <form id="project-form" class="space-y-4">
+                <div>
+                    <input type="text" id="project-name" placeholder="Project Name" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors" required>
+                </div>
+                <div>
+                    <input type="text" id="project-desc" placeholder="Short Description" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors" required>
+                </div>
+                <div>
+                    <select id="project-status" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors appearance-none cursor-pointer">
+                        <option value="Planning">Planning</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Active">Active</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="url" id="project-link" placeholder="Project URL (optional)" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors">
+                </div>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white rounded-lg py-2.5 font-medium transition-colors shadow-[0_0_15px_rgba(139,92,246,0.2)]">Add Project</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Habit Modal -->
+    <div id="habit-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity">
+        <div class="w-full max-w-md bg-dark-panel border border-dark-border rounded-2xl shadow-2xl p-6 transform scale-95 transition-transform" id="habit-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-white">Add Habit</h3>
+                <button id="close-habit-modal" class="text-dark-muted hover:text-white"><i class="ph-bold ph-x"></i></button>
+            </div>
+            <form id="habit-form" class="space-y-4">
+                <div>
+                    <input type="text" id="habit-name" placeholder="Habit Name" class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2.5 text-white outline-none focus:border-brand-500 transition-colors" required>
+                </div>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white rounded-lg py-2.5 font-medium transition-colors shadow-[0_0_15px_rgba(139,92,246,0.2)]">Add Habit</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="mddos.js"></script>
+</body>
+</html>
