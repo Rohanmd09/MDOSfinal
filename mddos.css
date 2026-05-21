@@ -33,6 +33,46 @@ body {
         var(--color-dark-bg);
 }
 
+canvas {
+    max-width: 100%;
+}
+
+.startup-loader-card {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 22px 80px rgba(0, 0, 0, 0.42);
+}
+
+.startup-loader-bar {
+    position: relative;
+    overflow: hidden;
+    height: 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(97, 97, 116, 0.52);
+    background: rgba(14, 14, 17, 0.85);
+}
+
+.startup-loader-progress {
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.85), rgba(16, 185, 129, 0.85), rgba(59, 130, 246, 0.85));
+    box-shadow: 0 0 18px rgba(139, 92, 246, 0.45);
+    animation: startupLoad 5s linear forwards;
+}
+
+#startup-loader {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 420ms ease, visibility 420ms ease;
+}
+
+#startup-loader.is-hiding {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -120,6 +160,15 @@ body {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes startupLoad {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
     }
 }
 
@@ -309,10 +358,171 @@ body {
     .stats-grid {
         grid-template-columns: 1fr;
     }
+
+    #view-container {
+        padding: 1.25rem;
+    }
 }
 
 @media (max-width: 640px) {
     aside {
         display: none !important;
+    }
+
+    body {
+        overflow: hidden;
+    }
+
+    main {
+        width: 100%;
+        min-width: 0;
+    }
+
+    #mobile-bottom-nav {
+        display: block !important;
+        padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    .mobile-brand {
+        display: flex !important;
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .mobile-command-btn {
+        display: inline-flex !important;
+    }
+
+    #shortcuts-dock {
+        display: none !important;
+    }
+
+    header {
+        height: auto !important;
+        min-height: 4.5rem;
+        padding: 0.9rem 1rem !important;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    header > div:last-child {
+        width: 100%;
+        justify-content: space-between;
+        min-width: 0;
+    }
+
+    #view-container {
+        padding: 1rem !important;
+        padding-bottom: 6.5rem !important;
+        scroll-padding-bottom: 7rem;
+    }
+
+    .mobile-nav-btn {
+        min-width: 72px;
+    }
+
+    #mobile-bottom-nav .nav-btn.active::before {
+        display: none;
+    }
+
+    .glass-panel {
+        border-radius: 1.1rem;
+    }
+
+    .stats-grid {
+        gap: 10px;
+    }
+
+    .domain-heat-row {
+        grid-template-columns: 92px repeat(7, minmax(28px, 1fr));
+        gap: 4px;
+    }
+
+    .domain-heat-cell {
+        min-width: 28px;
+        font-size: 9px;
+    }
+
+    #live-clock {
+        font-size: 0.8rem;
+    }
+
+    #live-date {
+        font-size: 0.58rem;
+    }
+
+    .heatmap-cell {
+        width: 20px;
+        height: 20px;
+    }
+
+    #analytics-view .glass-panel,
+    #habits-view .glass-panel,
+    #overview-view .glass-panel,
+    #academics-view .glass-panel,
+    #extracurriculars-view .glass-panel {
+        padding: 1rem !important;
+    }
+
+    #focus-view .w-64,
+    #focus-view .h-64 {
+        width: 14rem !important;
+        height: 14rem !important;
+    }
+
+    #timer-display {
+        font-size: 2.6rem !important;
+    }
+
+    #task-modal,
+    #topic-modal,
+    #project-modal,
+    #habit-modal {
+        align-items: flex-end !important;
+        padding: 0.75rem;
+    }
+
+    #task-modal > div,
+    #topic-modal > div,
+    #project-modal > div,
+    #habit-modal > div {
+        max-width: none !important;
+        width: 100% !important;
+        border-radius: 1.25rem 1.25rem 0 0 !important;
+        max-height: 88vh;
+        overflow-y: auto;
+    }
+
+    #task-form .grid,
+    #quick-add-form .grid,
+    #project-form .grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    #cmd-palette {
+        padding-top: 8vh !important;
+    }
+
+    #cmd-palette-content {
+        width: calc(100% - 1rem) !important;
+        margin: 0 0.5rem;
+    }
+
+    .task-card {
+        border-radius: 14px;
+    }
+
+    .startup-loader-card {
+        padding: 2rem 1.25rem;
+        border-radius: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.4rem !important;
+        line-height: 1.2;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 6px;
     }
 }
