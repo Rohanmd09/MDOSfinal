@@ -20,6 +20,7 @@
         Personal: 12,
         Other: 13
     };
+    const STARTUP_LOADER_MS = 5000;
     const PRIORITY_ORDER = { High: 0, Medium: 1, Low: 2 };
     const STATUS_LABELS = { todo: "To Do", "in-progress": "In Progress", done: "Done" };
     const STATUS_COLUMNS = { todo: "kanban-todo", "in-progress": "kanban-progress", done: "kanban-done" };
@@ -60,6 +61,7 @@
     document.addEventListener("DOMContentLoaded", init);
 
     function init() {
+        startStartupLoader();
         bindNavigation();
         bindClock();
         bindTaskUi();
@@ -981,6 +983,10 @@
             section.classList.remove("hidden");
             section.classList.add("active", "animate-fade-in");
         }
+        const viewContainer = document.getElementById("view-container");
+        if (viewContainer) {
+            viewContainer.scrollTo({ top: 0, behavior: "auto" });
+        }
         document.querySelectorAll(".nav-btn").forEach((btn) => {
             const active = btn.dataset.view === viewName;
             btn.classList.toggle("active", active);
@@ -1185,10 +1191,14 @@
 
     function bindCommandPalette() {
         const openBtn = document.getElementById("cmd-k-btn");
+        const mobileOpenBtn = document.getElementById("mobile-command-btn");
         const palette = document.getElementById("cmd-palette");
         const input = document.getElementById("cmd-input");
 
         openBtn.addEventListener("click", () => openCommandPalette());
+        if (mobileOpenBtn) {
+            mobileOpenBtn.addEventListener("click", () => openCommandPalette());
+        }
         palette.addEventListener("click", (event) => {
             if (event.target === palette) {
                 closeCommandPalette();
@@ -1253,6 +1263,19 @@
         setTimeout(() => {
             palette.classList.add("hidden");
         }, 160);
+    }
+
+    function startStartupLoader() {
+        const loader = document.getElementById("startup-loader");
+        if (!loader) {
+            return;
+        }
+        window.setTimeout(() => {
+            loader.classList.add("is-hiding");
+            window.setTimeout(() => {
+                loader.remove();
+            }, 500);
+        }, STARTUP_LOADER_MS);
     }
 
     function buildCommandResults(query) {
