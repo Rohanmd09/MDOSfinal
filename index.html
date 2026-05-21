@@ -59,6 +59,25 @@
     <link rel="stylesheet" href="mddos.css">
 </head>
 <body class="bg-dark-bg text-dark-text font-sans h-screen w-screen overflow-hidden flex selection:bg-brand-500/30 selection:text-brand-200">
+    <div id="startup-loader" class="fixed inset-0 z-[80] flex items-center justify-center overflow-hidden bg-dark-bg">
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute -top-24 left-[8%] h-64 w-64 rounded-full bg-brand-500/15 blur-3xl"></div>
+            <div class="absolute top-[12%] right-[10%] h-56 w-56 rounded-full bg-emerald-500/10 blur-3xl"></div>
+            <div class="absolute bottom-[8%] left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-blue-500/10 blur-3xl"></div>
+        </div>
+        <div class="startup-loader-card relative mx-6 w-full max-w-md rounded-[28px] border border-dark-border bg-dark-panel/80 px-8 py-10 text-center shadow-2xl backdrop-blur-xl">
+            <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 shadow-[0_0_30px_rgba(139,92,246,0.35)]">
+                <i class="ph-bold ph-lightning text-3xl text-white"></i>
+            </div>
+            <p class="mb-2 text-[11px] font-mono uppercase tracking-[0.35em] text-brand-300">Boot Sequence</p>
+            <h1 class="mb-2 text-3xl font-bold tracking-tight text-white">LifeOS</h1>
+            <p class="mx-auto mb-6 max-w-xs text-sm text-dark-muted">Loading your academic system, routines, projects, and focus environment.</p>
+            <div class="startup-loader-bar">
+                <div class="startup-loader-progress"></div>
+            </div>
+            <div class="mt-4 text-xs font-mono uppercase tracking-[0.24em] text-dark-muted">Approx 5 seconds</div>
+        </div>
+    </div>
 
     <!-- Left Sidebar -->
     <aside class="w-64 h-full bg-dark-bg border-r border-dark-border flex flex-col pt-6 pb-4 flex-shrink-0 relative z-10">
@@ -139,6 +158,18 @@
 
             <!-- Clock & Quick Actions -->
             <div class="flex items-center gap-4">
+                <div class="hidden mobile-brand items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.35)]">
+                        <i class="ph-bold ph-lightning text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm font-semibold text-white leading-tight">LifeOS</div>
+                        <div class="text-[10px] font-mono uppercase tracking-wider text-dark-muted">Mobile Command</div>
+                    </div>
+                </div>
+                <button id="mobile-command-btn" class="hidden mobile-command-btn h-10 w-10 items-center justify-center rounded-xl border border-dark-border bg-dark-panel/70 text-dark-muted transition-colors hover:border-brand-500/40 hover:text-white" aria-label="Open command palette">
+                    <i class="ph ph-command text-lg"></i>
+                </button>
                 <div class="text-right">
                     <div id="live-clock" class="text-sm font-medium text-white tracking-wide">00:00 AM</div>
                     <div id="live-date" class="text-[10px] font-mono text-dark-muted uppercase">Mon, Jan 1</div>
@@ -489,6 +520,53 @@
 
         </div>
     </main>
+
+    <nav id="mobile-bottom-nav" class="hidden fixed bottom-0 inset-x-0 z-40 border-t border-dark-border bg-dark-bg/95 backdrop-blur-xl px-3 py-2">
+        <div class="flex items-center gap-2 overflow-x-auto custom-scrollbar">
+            <button class="nav-btn mobile-nav-btn active flex-shrink-0 min-w-[76px] rounded-xl border border-dark-border bg-dark-panel/70 px-3 py-2 text-xs text-white transition-colors" data-view="overview">
+                <div class="flex flex-col items-center gap-1">
+                    <i class="ph ph-squares-four text-base"></i>
+                    <span>Overview</span>
+                </div>
+            </button>
+            <button class="nav-btn mobile-nav-btn flex-shrink-0 min-w-[76px] rounded-xl border border-dark-border bg-dark-panel/40 px-3 py-2 text-xs text-dark-muted transition-colors" data-view="tasks">
+                <div class="flex flex-col items-center gap-1">
+                    <i class="ph ph-check-square-offset text-base"></i>
+                    <span>Tasks</span>
+                </div>
+            </button>
+            <button class="nav-btn mobile-nav-btn flex-shrink-0 min-w-[76px] rounded-xl border border-dark-border bg-dark-panel/40 px-3 py-2 text-xs text-dark-muted transition-colors" data-view="focus">
+                <div class="flex flex-col items-center gap-1">
+                    <i class="ph ph-target text-base"></i>
+                    <span>Focus</span>
+                </div>
+            </button>
+            <button class="nav-btn mobile-nav-btn flex-shrink-0 min-w-[76px] rounded-xl border border-dark-border bg-dark-panel/40 px-3 py-2 text-xs text-dark-muted transition-colors" data-view="academics">
+                <div class="flex flex-col items-center gap-1">
+                    <i class="ph ph-books text-base"></i>
+                    <span>Academics</span>
+                </div>
+            </button>
+            <button class="nav-btn mobile-nav-btn flex-shrink-0 min-w-[76px] rounded-xl border border-dark-border bg-dark-panel/40 px-3 py-2 text-xs text-dark-muted transition-colors" data-view="extracurriculars">
+                <div class="flex flex-col items-center gap-1">
+                    <i class="ph ph-rocket-launch text-base"></i>
+                    <span>Projects</span>
+                </div>
+            </button>
+            <button class="nav-btn mobile-nav-btn flex-shrink-0 min-w-[76px] rounded-xl border border-dark-border bg-dark-panel/40 px-3 py-2 text-xs text-dark-muted transition-colors" data-view="habits">
+                <div class="flex flex-col items-center gap-1">
+                    <i class="ph ph-plant text-base"></i>
+                    <span>Habits</span>
+                </div>
+            </button>
+            <button class="nav-btn mobile-nav-btn flex-shrink-0 min-w-[76px] rounded-xl border border-dark-border bg-dark-panel/40 px-3 py-2 text-xs text-dark-muted transition-colors" data-view="analytics">
+                <div class="flex flex-col items-center gap-1">
+                    <i class="ph ph-chart-line-up text-base"></i>
+                    <span>Analytics</span>
+                </div>
+            </button>
+        </div>
+    </nav>
 
     <!-- Command Palette Modal -->
     <div id="cmd-palette" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center pt-[15vh] hidden opacity-0 transition-opacity">
