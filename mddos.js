@@ -803,13 +803,18 @@ function closeModal(id) {
 // STARTUP
 // ==========================================
 async function onSignedIn() {
-  const loader=document.getElementById('startup-loader');
-  if (loader) { loader.classList.remove('hidden'); loader.style.opacity='1'; }
+  // Hide loader immediately — no loading screen on sign-in
+  const loader = document.getElementById('startup-loader');
+  if (loader) loader.classList.add('hidden');
+
   await loadAllData();
   setupRealtime();
-  renderOverviewStats(); renderTasks(); renderAcademics();
-  renderProjects(); renderHabits(); renderRoutine();
-  if (loader) { loader.style.transition='opacity 0.6s'; loader.style.opacity='0'; setTimeout(()=>loader.classList.add('hidden'),600); }
+  renderOverviewStats();
+  renderTasks();
+  renderAcademics();
+  renderProjects();
+  renderHabits();
+  renderRoutine();
 }
 
 // ==========================================
