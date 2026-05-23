@@ -58,8 +58,8 @@ function hideAuthScreen() {
   document.getElementById('auth-screen')?.classList.add('hidden');
 }
 
-async function sendMagicLink(email) {
-  const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin } });
+async function signIn(email, password) {
+  const { error } = await sb.auth.signInWithPassword({ email, password });
   return error;
 }
 
@@ -871,7 +871,7 @@ function bindEvents() {
   document.getElementById('export-csv-btn')?.addEventListener('click',exportCSV);
 
   // Auth
-  document.getElementById('auth-form')?.addEventListener('submit',async e=>{ e.preventDefault(); const email=document.getElementById('auth-email').value; const btn=document.getElementById('auth-submit-btn'); const msg=document.getElementById('auth-message'); btn.textContent='Sending...'; btn.disabled=true; const error=await sendMagicLink(email); if(error){ msg.textContent='Error: '+error.message; msg.className='text-sm text-red-400 mt-3'; btn.textContent='Send Magic Link'; btn.disabled=false; } else { msg.textContent='✓ Check your email for the magic link!'; msg.className='text-sm text-emerald-400 mt-3'; } });
+  document.getElementById('auth-form')?.addEventListener('submit',async e=>{ e.preventDefault(); const email=document.getElementById('auth-email').value; const password=document.getElementById('auth-password').value; const btn=document.getElementById('auth-submit-btn'); const msg=document.getElementById('auth-message'); btn.textContent='Signing in...'; btn.disabled=true; const error=await signIn(email,password); if(error){ msg.textContent='Incorrect email or password.'; msg.className='text-sm text-red-400 mt-3 text-center'; btn.textContent='Sign In'; btn.disabled=false; } });
   document.getElementById('auth-signout-btn')?.addEventListener('click',()=>sb.auth.signOut());
 
   window.addEventListener('resize',setupMobileNav);
