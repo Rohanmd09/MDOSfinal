@@ -746,8 +746,10 @@ function renderCmdResults(q) {
 // ==========================================
 function switchView(v) {
   state.currentView=v;
-  document.querySelectorAll('.view-section').forEach(s=>s.classList.add('hidden'));
-  document.getElementById(`${v}-view`)?.classList.remove('hidden');
+  // Toggle both Tailwind hidden AND the active class that mddos.css uses for display control
+  document.querySelectorAll('.view-section').forEach(s=>{ s.classList.add('hidden'); s.classList.remove('active'); });
+  const target = document.getElementById(`${v}-view`);
+  if (target) { target.classList.remove('hidden'); target.classList.add('active'); }
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll(`.nav-btn[data-view="${v}"]`).forEach(b=>b.classList.add('active'));
   if (v==='analytics') renderAnalytics();
