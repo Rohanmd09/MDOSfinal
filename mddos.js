@@ -438,43 +438,120 @@ function initKanbanSortable() {
 // ACADEMICS
 // ==========================================
 const SUBJECTS = ['Physics','Maths','Further Maths','Economics','Accounts','English'];
-const SUBJ_STYLES = {
-  Physics:       'from-blue-500/20 border-blue-500/30 text-blue-300 bar-blue-500',
-  Maths:         'from-purple-500/20 border-purple-500/30 text-purple-300 bar-purple-500',
-  'Further Maths':'from-violet-500/20 border-violet-500/30 text-violet-300 bar-violet-500',
-  Economics:     'from-emerald-500/20 border-emerald-500/30 text-emerald-300 bar-emerald-500',
-  Accounts:      'from-amber-500/20 border-amber-500/30 text-amber-300 bar-amber-500',
-  English:       'from-rose-500/20 border-rose-500/30 text-rose-300 bar-rose-500',
+
+const SUBJ_CONFIG = {
+  Physics:       { icon:'ph-atom',           color:'blue',    sitting:'Oct–Nov 2026' },
+  Maths:         { icon:'ph-function',        color:'purple',  sitting:'Oct–Nov 2026  ·  Feb–Mar 2027' },
+  'Further Maths':{ icon:'ph-infinity',       color:'violet',  sitting:'Oct–Nov 2026  ·  Feb–Mar 2027' },
+  Economics:     { icon:'ph-trend-up',        color:'emerald', sitting:'Oct–Nov 2026' },
+  Accounts:      { icon:'ph-calculator',      color:'amber',   sitting:'Oct–Nov 2026  ·  AS Level' },
+  English:       { icon:'ph-book-open-text',  color:'rose',    sitting:'Oct–Nov 2026  ·  AS Level' },
 };
+
+const COMPONENT_LABELS = {
+  'AS':'AS Level', 'A2':'A2 Level',
+  'AS Micro':'AS · Microeconomics', 'AS Macro':'AS · Macroeconomics',
+  'A2 Micro':'A2 · Microeconomics', 'A2 Macro':'A2 · Macroeconomics',
+  'P1':'Pure Mathematics 1', 'S1':'Probability & Statistics 1',
+  'P2':'Pure Mathematics 2', 'M1':'Mechanics',
+  'FP1':'Further Pure 1', 'FS':'Further Statistics',
+  'FP2':'Further Pure 2', 'FM':'Further Mechanics',
+};
+
+const PALETTE = {
+  blue:    { bg:'bg-blue-500/8',    border:'border-blue-500/20',    text:'text-blue-300',    badge:'bg-blue-500/15 text-blue-300 border border-blue-500/25',    bar:'from-blue-500 to-blue-400',    check:'border-blue-400/50' },
+  purple:  { bg:'bg-purple-500/8',  border:'border-purple-500/20',  text:'text-purple-300',  badge:'bg-purple-500/15 text-purple-300 border border-purple-500/25',  bar:'from-purple-500 to-purple-400',  check:'border-purple-400/50' },
+  violet:  { bg:'bg-violet-500/8',  border:'border-violet-500/20',  text:'text-violet-300',  badge:'bg-violet-500/15 text-violet-300 border border-violet-500/25',  bar:'from-violet-500 to-violet-400',  check:'border-violet-400/50' },
+  emerald: { bg:'bg-emerald-500/8', border:'border-emerald-500/20', text:'text-emerald-300', badge:'bg-emerald-500/15 text-emerald-300 border border-emerald-500/25', bar:'from-emerald-500 to-emerald-400', check:'border-emerald-400/50' },
+  amber:   { bg:'bg-amber-500/8',   border:'border-amber-500/20',   text:'text-amber-300',   badge:'bg-amber-500/15 text-amber-300 border border-amber-500/25',   bar:'from-amber-500 to-amber-400',   check:'border-amber-400/50' },
+  rose:    { bg:'bg-rose-500/8',    border:'border-rose-500/20',    text:'text-rose-300',    badge:'bg-rose-500/15 text-rose-300 border border-rose-500/25',    bar:'from-rose-500 to-rose-400',    check:'border-rose-400/50' },
+};
+
+function parseTopicTag(title) {
+  const m = title.match(/^\[([^\]]+)\]\s*/);
+  return m ? { tag: m[1], clean: title.slice(m[0].length) } : { tag: '', clean: title };
+}
 
 function renderAcademics() {
   const grid = document.getElementById('academics-grid');
   if (!grid) return;
+
   grid.innerHTML = SUBJECTS.map(subject => {
+    const cfg = SUBJ_CONFIG[subject] || { icon:'ph-book', color:'blue', sitting:'' };
+    const pal = PALETTE[cfg.color];
     const topics = state.topics.filter(t => t.subject === subject);
     const done = topics.filter(t => t.completed).length;
-    const pct = topics.length ? Math.round((done/topics.length)*100) : 0;
-    const s = SUBJ_STYLES[subject] || '';
-    const [grad, border, color] = s.split(' ');
-    return `<div class="glass-panel p-6 rounded-2xl bg-gradient-to-br ${grad} to-transparent border ${border}">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-semibold ${color}">${subject}</h3>
-        <span class="text-xs font-mono text-dark-muted">${done}/${topics.length}</span>
-      </div>
-      <div class="h-1.5 rounded-full bg-dark-border mb-4 overflow-hidden">
-        <div class="h-full rounded-full bg-gradient-to-r ${grad.replace('/20','/70')} to-transparent" style="width:${pct}%"></div>
-      </div>
-      <div class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar mb-3">
-        ${!topics.length ? '<p class="text-xs text-dark-muted italic">No topics yet.</p>' : ''}
-        ${topics.map(tp => `<div class="flex items-center gap-2 group">
-          <button onclick="toggleTopic('${tp.id}')" class="w-4 h-4 rounded flex-shrink-0 border flex items-center justify-center transition-colors ${tp.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-dark-border hover:border-emerald-500'}">
-            ${tp.completed ? '<i class="ph-bold ph-check text-[8px]"></i>' : ''}
-          </button>
-          <span class="text-xs flex-1 ${tp.completed ? 'line-through text-dark-muted' : 'text-white'}">${tp.title}</span>
-          <button onclick="deleteTopic('${tp.id}')" class="opacity-0 group-hover:opacity-100 text-dark-muted hover:text-red-400 transition-all"><i class="ph-bold ph-x text-[10px]"></i></button>
-        </div>`).join('')}
-      </div>
-    </div>`;
+    const pct = topics.length ? Math.round((done / topics.length) * 100) : 0;
+
+    // Group by component tag, preserving insertion order
+    const groups = {};
+    topics.forEach(tp => {
+      const { tag, clean } = parseTopicTag(tp.title);
+      if (!groups[tag]) groups[tag] = [];
+      groups[tag].push({ ...tp, cleanTitle: clean });
+    });
+
+    const groupsHtml = Object.entries(groups).map(([tag, grpTopics]) => {
+      const grpDone = grpTopics.filter(t => t.completed).length;
+      const label = COMPONENT_LABELS[tag] || tag || 'Topics';
+      return `
+        <div class="mb-5 last:mb-0">
+          <div class="flex items-center gap-2 mb-2.5">
+            <span class="text-[10px] font-mono font-semibold uppercase tracking-[0.12em] px-2.5 py-1 rounded-full ${pal.badge}">${label}</span>
+            <span class="text-[10px] font-mono text-dark-muted">${grpDone}/${grpTopics.length}</span>
+            <div class="flex-1 h-px bg-dark-border/50 ml-1"></div>
+          </div>
+          <div class="space-y-px">
+            ${grpTopics.map(tp => `
+              <div class="flex items-center gap-3 px-2 py-1.5 rounded-lg group hover:bg-white/[0.03] transition-colors cursor-default">
+                <button onclick="toggleTopic('${tp.id}')"
+                  class="flex-shrink-0 w-[18px] h-[18px] rounded-md border-2 flex items-center justify-center transition-all
+                  ${tp.completed ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : `border-dark-border group-hover:${pal.check}`}">
+                  ${tp.completed ? '<i class="ph-bold ph-check" style="font-size:9px"></i>' : ''}
+                </button>
+                <span class="text-[13px] flex-1 leading-snug ${tp.completed ? 'line-through text-dark-muted/50' : 'text-dark-text/85'}">${tp.cleanTitle}</span>
+                <button onclick="deleteTopic('${tp.id}')"
+                  class="opacity-0 group-hover:opacity-100 transition-opacity text-dark-muted/40 hover:text-red-400 flex-shrink-0">
+                  <i class="ph-bold ph-x" style="font-size:10px"></i>
+                </button>
+              </div>`).join('')}
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="glass-panel rounded-2xl border ${pal.border} overflow-hidden flex flex-col">
+
+        <!-- ── Subject Header ── -->
+        <div class="px-6 pt-5 pb-4 border-b ${pal.border}" style="background:linear-gradient(135deg,rgba(0,0,0,0.2) 0%,transparent 100%)">
+          <div class="flex items-start justify-between gap-4 mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl ${pal.bg} border ${pal.border} flex items-center justify-center flex-shrink-0">
+                <i class="ph-bold ${cfg.icon} ${pal.text} text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-white text-base tracking-tight">${subject}</h3>
+                <p class="text-[10px] font-mono text-dark-muted mt-0.5 tracking-wide">${cfg.sitting}</p>
+              </div>
+            </div>
+            <div class="text-right flex-shrink-0 pt-0.5">
+              <div class="text-2xl font-bold ${pal.text} leading-none">${pct}<span class="text-sm font-normal text-dark-muted">%</span></div>
+              <div class="text-[10px] font-mono text-dark-muted mt-0.5">${done} of ${topics.length}</div>
+            </div>
+          </div>
+          <!-- Progress bar -->
+          <div class="h-1 rounded-full bg-dark-border/50 overflow-hidden">
+            <div class="h-full rounded-full bg-gradient-to-r ${pal.bar} transition-all duration-700" style="width:${pct}%"></div>
+          </div>
+        </div>
+
+        <!-- ── Topics body ── -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar px-5 py-5 max-h-96">
+          ${!topics.length
+            ? `<div class="text-center py-10"><i class="ph ph-books ${pal.text} text-3xl block mb-2 opacity-40"></i><p class="text-xs text-dark-muted italic">No topics yet.</p></div>`
+            : groupsHtml}
+        </div>
+      </div>`;
   }).join('');
 }
 
