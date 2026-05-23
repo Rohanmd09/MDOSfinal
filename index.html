@@ -71,18 +71,19 @@ tailwind.config = {
         <i class="ph-bold ph-lightning text-2xl text-white"></i>
       </div>
       <h1 class="text-2xl font-bold text-white mb-1">LifeOS</h1>
-      <p class="text-sm text-dark-muted">Enter your email to sign in or create your account.</p>
+      <p class="text-sm text-dark-muted">Sign in to your LifeOS.</p>
     </div>
-    <form id="auth-form" class="space-y-4">
-      <input id="auth-email" type="email" required placeholder="your@email.com"
+    <form id="auth-form" class="space-y-3">
+      <input id="auth-email" type="email" required placeholder="Email"
+        class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-3 text-white outline-none focus:border-brand-500 transition-colors placeholder-dark-muted text-sm">
+      <input id="auth-password" type="password" required placeholder="Password"
         class="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-3 text-white outline-none focus:border-brand-500 transition-colors placeholder-dark-muted text-sm">
       <button id="auth-submit-btn" type="submit"
         class="w-full bg-brand-600 hover:bg-brand-500 text-white rounded-xl py-3 font-medium transition-colors shadow-[0_0_20px_rgba(139,92,246,0.3)] text-sm">
-        Send Magic Link
+        Sign In
       </button>
     </form>
     <p id="auth-message" class="text-sm mt-3 text-center"></p>
-    <p class="text-xs text-dark-muted text-center mt-6">No password needed. A secure link is sent to your inbox.</p>
   </div>
 </div>
 
